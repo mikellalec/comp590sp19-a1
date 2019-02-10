@@ -8,15 +8,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Collections;
 
 import io.InputStreamBitSource;
 import io.InsufficientBitsLeftException;
 
 public class HuffDecode {
 
-	public static void main(String[] args) throws FileNotFoundException {
-		String input_file_name = "data/recompressed.dat";
-		String output_file_name = "data/reuncompressed.txt";
+	public static void main(String[] args) throws InsufficientBitsLeftException, IOException {
+		String input_file_name = "data/compressed.dat";
+		String output_file_name = "data/uncompressed.txt";
 		
 		FileInputStream fis = new FileInputStream(input_file_name);
 
@@ -26,11 +27,15 @@ public class HuffDecode {
 
 		// Read in huffman code lengths from input file and associate them with each symbol as a 
 		// SymbolWithCodeLength object and add to the list symbols_with_length.
+		for(int i = 0; i != 256; i++) {
+			int code_length = bit_source.next(8);
+			symbols_with_length.add(new SymbolWithCodeLength(i,code_length));
+		}
 		
-		// Then sort they symbols.
+		Collections.sort(symbols_with_length);
 
 		// Now construct the canonical huffman tree
-
+		
 		HuffmanDecodeTree huff_tree = new HuffmanDecodeTree(symbols_with_length);
 
 		int num_symbols = 0;
