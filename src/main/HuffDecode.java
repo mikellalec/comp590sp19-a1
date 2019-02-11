@@ -16,8 +16,8 @@ import io.InsufficientBitsLeftException;
 public class HuffDecode {
 
 	public static void main(String[] args) throws Exception {
-		String input_file_name = "data/recompressed.txt";
-		String output_file_name = "data/reuncompressed.txt";
+		String input_file_name = "data/compressed.dat";
+		String output_file_name = "data/uncompressed.txt";
 		
 		FileInputStream fis = new FileInputStream(input_file_name);
 
@@ -41,14 +41,28 @@ public class HuffDecode {
 		// Read in the next 32 bits from the input file  the number of symbols
 		int num_symbols = bit_source.next(32);
 		
+		// Need counts to calculate given compressed entropy
+		int[] symbol_counts = new int[256];
+		
 		try {
 			// Open up output file.
 			FileOutputStream fos = new FileOutputStream(output_file_name);
-
+			
 			for (int i=0; i != num_symbols; i++) {
 				int decoded_symbol = huff_tree.decode(bit_source);
+				symbol_counts[decoded_symbol]++;
 				fos.write(decoded_symbol);
 			}
+			
+			// Initialize entropy counter
+			double givenEntropy = 0;
+			for(int i = 0; i != 256; i++) {
+				Double probability = new Double((double)symbol_counts[i]/(double)num_symbols);
+				// if(symbol_counts[i]>0) System.out.println(i + " has " + symbol_counts[i] + " occurrences, probability " + probability.toString());
+				if(probability > 0) givenEntropy+=((double)probability*(double)symbols_with_length.get(i).codeLength());
+			}
+			
+			System.out.println("Given entropy, bits per symbol: " + givenEntropy);
 
 			// Flush output and close files.
 			fos.flush();

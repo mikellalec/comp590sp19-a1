@@ -33,12 +33,23 @@ public class HuffEncode {
 		
 		// Close input file
 		fis.close();
-
+		
+		// Initialize entropy counters
+		double entropy = 0;
+		double myEntropy = 0;
+		
 		// Create array of symbol values
 		int[] symbols = new int[256];
 		for (int i=0; i<256; i++) {
 			symbols[i] = i;
+			// Display probabilities for part 3
+			Double probability = new Double((double)symbol_counts[i]/(double)num_symbols);
+			// if(symbol_counts[i]>0) System.out.println(i + " has " + symbol_counts[i] + " occurrences, probability " + probability.toString());
+			if(probability>0) entropy+=((double)probability*(-1)*(Math.log((double)probability))/Math.log(2));
 		}
+		
+		//Bits per symbol theoretical compression limit
+		System.out.println("Theoretical entropy, bits per symbol: " + entropy);
 		
 		// Create encoder using symbols and their associated counts from file.
 		HuffmanEncoder encoder = new HuffmanEncoder(symbols, symbol_counts);
@@ -49,8 +60,13 @@ public class HuffEncode {
 
 		// Write out code lengths for each symbol as 8 bit value to output file.
 		for(int i = 0; i != 256; i++) {
+			Double probability = new Double((double)symbol_counts[i]/(double)num_symbols);
+			if(probability > 0) myEntropy+=((double)probability*(double)encoder.getCode(i).length());
 			bit_sink.write(encoder.getCode(i).length(),8);
 		}
+		
+		//Bits per symbol entropy compression from recompressed file
+		System.out.println("Recompressed entropy, bits per symbol: " + myEntropy);
 		
 		// Write out total number of symbols as 32 bit value.
 		bit_sink.write(num_symbols,32);
