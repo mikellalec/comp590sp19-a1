@@ -10,6 +10,11 @@ public class InternalHuffmanNode implements HuffmanNode {
 		_right=null;
 	}
 	
+	public InternalHuffmanNode(HuffmanNode left, HuffmanNode right) {
+		_left=left;
+		_right=right;
+	}
+	
 	@Override
 	public int count() {
 		return _left.count() + _right.count();
@@ -21,8 +26,8 @@ public class InternalHuffmanNode implements HuffmanNode {
 	}
 
 	@Override
-	public int symbol() {
-		return -1;
+	public int symbol() throws Exception {
+		throw new Exception("Not applicable to internal nodes:");
 	}
 
 	@Override
@@ -49,7 +54,7 @@ public class InternalHuffmanNode implements HuffmanNode {
 				}
 			}else {
 				if(length==1) {
-					_right = new LeafHuffmanNode(symbol);
+					_right = new LeafHuffmanNode(symbol, 0);
 					return true; // Create right leaf
 				}else {
 					_right = new InternalHuffmanNode();
@@ -58,7 +63,7 @@ public class InternalHuffmanNode implements HuffmanNode {
 			}
 		}else {
 			if(length==1) {
-				_left = new LeafHuffmanNode(symbol);
+				_left = new LeafHuffmanNode(symbol, 0);
 				return true; // Create left leaf
 			}else {
 				_left = new InternalHuffmanNode();

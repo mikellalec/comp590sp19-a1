@@ -5,8 +5,8 @@ public class LeafHuffmanNode implements HuffmanNode {
 	private int _count;
 	private int _symbol;
 	
-	public LeafHuffmanNode(int symbol) {
-		_count = 0;
+	public LeafHuffmanNode(int symbol, int count) {
+		_count = count;
 		_symbol = symbol;
 	}
 	

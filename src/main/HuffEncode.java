@@ -5,11 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import io.InputStreamBitSource;
 import io.OutputStreamBitSink;
 
 public class HuffEncode {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		String input_file_name = "data/uncompressed.txt";
 		String output_file_name = "data/recompressed.txt";
 
@@ -47,17 +48,24 @@ public class HuffEncode {
 		OutputStreamBitSink bit_sink = new OutputStreamBitSink(fos);
 
 		// Write out code lengths for each symbol as 8 bit value to output file.
+		for(int i = 0; i != 256; i++) {
+			bit_sink.write(encoder.getCode(i).length(),8);
+		}
 		
 		// Write out total number of symbols as 32 bit value.
 		bit_sink.write(num_symbols,32);
 		
 		// Reopen input file.
 		fis = new FileInputStream(input_file_name);
-
+		
 		// Go through input file, read each symbol (i.e. byte),
 		// look up code using encoder.getCode() and write code
         // out to output file.
-		
+		next_byte = fis.read();
+		while(next_byte!=-1) {
+			encoder.encode(next_byte, bit_sink);
+			next_byte = fis.read();
+		}
 
 		// Pad output to next word.
 		bit_sink.padToWord();

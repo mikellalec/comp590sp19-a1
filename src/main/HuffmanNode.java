@@ -24,7 +24,7 @@ public interface HuffmanNode extends Comparable<HuffmanNode> {
 	
 	// symbol() returns symbol associated with leaf node. Not applicable for
 	// internal node. Calling on internal node should throw an exception.
-	int symbol();
+	int symbol() throws Exception;
 	
 	// height() returns distance between this node and farthest leaf underneath it.
 	// By definition, 0 for leaf nodes.
