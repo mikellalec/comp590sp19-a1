@@ -52,15 +52,15 @@ public interface HuffmanNode extends Comparable<HuffmanNode> {
 	//
 	// This method is only applicable for internal nodes. Calling on
 	// a leaf node should be an exception.
-	boolean insertSymbol(int length, int symbol);
+	boolean insertSymbol(int length, int symbol) throws Exception;
 	
 	// left() and right() return the left or right child of an
 	// internal node. Return value of null indicates that the
 	// internal node does not yet have a left or right child.
 	// Only applicable for internal nodes, calling these on a
 	// leaf node should result in an exception.
-	HuffmanNode left();
-	HuffmanNode right();
+	HuffmanNode left() throws Exception;
+	HuffmanNode right() throws Exception;
 
 
 	// compareTo implements the Comparable interface for 

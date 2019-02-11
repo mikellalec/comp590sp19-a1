@@ -15,7 +15,7 @@ import io.InsufficientBitsLeftException;
 
 public class HuffDecode {
 
-	public static void main(String[] args) throws InsufficientBitsLeftException, IOException {
+	public static void main(String[] args) throws Exception {
 		String input_file_name = "data/compressed.dat";
 		String output_file_name = "data/uncompressed.txt";
 		
@@ -32,28 +32,28 @@ public class HuffDecode {
 			symbols_with_length.add(new SymbolWithCodeLength(i,code_length));
 		}
 		
+		// Sort symbols (length then value)
 		Collections.sort(symbols_with_length);
+		
+		// Shorter length values should be at front of list
+		// for(int i = 0; i != 256; i++) System.out.println(symbols_with_length.get(i).codeLength());
 
 		// Now construct the canonical huffman tree
-		
 		HuffmanDecodeTree huff_tree = new HuffmanDecodeTree(symbols_with_length);
 
-		int num_symbols = 0;
-
 		// Read in the next 32 bits from the input file  the number of symbols
-
+		int num_symbols = bit_source.next(32);
+		
 		try {
-
 			// Open up output file.
-			
 			FileOutputStream fos = new FileOutputStream(output_file_name);
 
-			for (int i=0; i<num_symbols; i++) {
-				// Decode next symbol using huff_tree and write out to file.
+			for (int i=0; i != num_symbols; i++) {
+				int decoded_symbol = huff_tree.decode(bit_source);
+				fos.write(decoded_symbol);
 			}
 
 			// Flush output and close files.
-			
 			fos.flush();
 			fos.close();
 			fis.close();

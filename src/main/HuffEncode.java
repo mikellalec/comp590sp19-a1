@@ -22,19 +22,24 @@ public class HuffEncode {
 		// update appropriate count value in symbol_counts
 		// Should end up with total number of symbols 
 		// (i.e., length of file) as num_symbols
-
+		int next_byte = fis.read();
+		
+		while(next_byte!=-1) {
+			symbol_counts[next_byte]++;
+			num_symbols++;
+			next_byte = fis.read();
+		}
+		
 		// Close input file
 		fis.close();
 
 		// Create array of symbol values
-		
 		int[] symbols = new int[256];
 		for (int i=0; i<256; i++) {
 			symbols[i] = i;
 		}
 		
 		// Create encoder using symbols and their associated counts from file.
-		
 		HuffmanEncoder encoder = new HuffmanEncoder(symbols, symbol_counts);
 		
 		// Open output stream.
@@ -44,7 +49,8 @@ public class HuffEncode {
 		// Write out code lengths for each symbol as 8 bit value to output file.
 		
 		// Write out total number of symbols as 32 bit value.
-
+		bit_sink.write(num_symbols,32);
+		
 		// Reopen input file.
 		fis = new FileInputStream(input_file_name);
 
